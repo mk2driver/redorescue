@@ -294,7 +294,7 @@ rm -rf /usr/share/man
 # Clean up and exit
 apt-get autoremove && apt-get clean
 rm -rf /var/lib/dbus/machine-id
-rm -rf /tmp/*
+# rm -rf /tmp/*
 rm -f /etc/resolv.conf
 rm -f /etc/debian_chroot
 rm -rf /var/lib/apt/lists/????????*
