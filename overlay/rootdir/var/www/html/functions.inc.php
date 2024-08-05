@@ -149,7 +149,7 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 		$options[$d->name] = "$d->name: ".$desc.(empty($os)?"":", $os");
 
 		//check if this disk is a RAID member
-		if ($d->fstype == "isw_raid_member") {
+		if ($d->fstype == "isw_raid_member" || $d->fstype == "linux_raid_member") {
 			if (property_exists($d, 'children')) {
 				//loop through all child partitions and check for RAID volume
 				foreach ($d->children as $c) {
