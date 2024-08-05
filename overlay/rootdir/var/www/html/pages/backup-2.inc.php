@@ -11,7 +11,17 @@ set_status($status);
 
 // Load cached list of disks
 $disks = get_disks();
-foreach ($disks->blockdevices as $d) if ($d->name==$status->drive) $disk = $d;
+foreach ($disks->blockdevices as $d) {
+	if ($d->name==$status->drive) {
+		//raw disk name match so save disk
+		$disk = $d;
+	}else{
+		//raw disk name did not match so check for RAID volume as top-level child device, save child element if matched
+		foreach ($d->children as $md) {if ($md->name == $status->drive) $disk = $md;}
+	}
+}
+
+// show error if disk or md volume not found with the selected name
 if (!isset($disk)) crash('Unable to read information for selected drive.');
 ?>
 
