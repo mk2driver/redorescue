@@ -155,7 +155,7 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 				foreach ($d->children as $c) {
 					if ($c->type == 'raid0' || $c->type == 'raid1') {
 						//raid volume found so store volume id as option
-						$options[$c->name] = $c->name;
+						$options[$c->name] = "RAID Volume: " . $c->name . "  Type: " . $c->type . "  Size: " . $c->size;
 					}
 				}
 			}
