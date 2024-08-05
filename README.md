@@ -90,7 +90,7 @@ Redo Rescue relies on [sfdisk](https://manpages.debian.org/stretch/util-linux/sf
 
 To build an ISO image from within Debian Linux:
 
-  1. `git clone https://github.com/redorescue/redorescue.git`
+  1. `git clone https://github.com/mk2driver/redorescue.git`
   2. `cd redorescue`
   3. `sudo ./make`
 
