@@ -17,7 +17,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-VER=5.0.0
+VER=5.0.1
 BASE=bookworm
 ARCH=amd64
 ROOT=rootdir
