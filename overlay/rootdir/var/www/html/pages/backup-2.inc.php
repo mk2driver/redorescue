@@ -17,7 +17,7 @@ foreach ($disks->blockdevices as $d) {
 		$disk = $d;
 	}else{
 		//raw disk name did not match so check for RAID volume as top-level child device, save child element if matched
-		foreach ($d->children as $md) {if ($md->name == $status->drive) $disk = $md;}
+		if (property_exists($d, 'children')) { foreach ($d->children as $c) {if ($c->name == $status->drive) $disk = $c;} }
 	}
 }
 
