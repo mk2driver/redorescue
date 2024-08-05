@@ -134,6 +134,7 @@ function get_disk_model($dev) {
 //
 function get_disk_options($disks, $type_filter='/(^disk)/') {
 	$options = array();
+	$raid = array();
 	foreach ($disks->blockdevices as $d) {
 		if (!preg_match($type_filter, $d->type)) continue;
 		// Prevent redundant vendor names
@@ -149,19 +150,19 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 		$options[$d->name] = "$d->name: ".$desc.(empty($os)?"":", $os");
 
 		//check if this disk is a RAID member
-		if ($d->fstype == "isw_raid_member" || $d->fstype == "linux_raid_member") {
+		if (str_ends_with($d->fstype, '_raid_member')) {
+			//loop through all child elements and check for RAID volume
 			if (property_exists($d, 'children')) {
-				//loop through all child partitions and check for RAID volume
 				foreach ($d->children as $c) {
-					if ($c->type == 'raid0' || $c->type == 'raid1') {
+					if (str_starts_with($c->type, 'raid'){
 						//raid volume found so store volume id as option
-						$options[$c->name] = "RAID Volume: " . $c->name . "  Type: " . $c->type . "  Size: " . $c->size;
+						$raid[$c->name] = $c->name . ":" . strtoupper($c->type) . ":" . $c->size;
 					}
 				}
 			}
 		}			
 	}
-	return $options;
+	return array_merge($options, $raid);
 }
 
 //
