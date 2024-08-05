@@ -11,7 +11,7 @@
 
 **Redo Rescue** (also known as [Redo Backup](https://github.com/redobackup/redobackup)) is a live CD/USB system that creates and restores snapshots of your system. Restore the image, even to a new blank drive, and recover in minutes from ransomware and viruses, deletions, hardware damage, and hackers.
 
-**This is the official Redo project developed since 2010 &mdash; now maintained on GitHub!**
+**This is my personal fork that I'm working on to add support for MD RAID backup.  CURRENTLY VERY MUCH A TEST BED - DO NOT USE!!  PLEASE USE THE OFFICIAL REPO!!
 
 
 ## Screenshots
