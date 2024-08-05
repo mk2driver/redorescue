@@ -147,6 +147,19 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 		$model = trim("$d->vendor $d->model");
 		$desc .= (empty($model)?"":", $model");
 		$options[$d->name] = "$d->name: ".$desc.(empty($os)?"":", $os");
+
+		//check if this disk is a RAID member
+		if ($d->fstype == "isw_raid_member") {
+			if (property_exists($d, 'children')) {
+				//loop through all child partitions and check for RAID volume
+				foreach ($d->children as $c) {
+					if ($c->type == 'raid0' || $c->type == 'raid1') {
+						//raid volume found so store volume id as option
+						$options[$c->name] = $c->name;
+					}
+				}
+			}
+		}			
 	}
 	return $options;
 }
