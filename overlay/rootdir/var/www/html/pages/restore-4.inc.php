@@ -29,7 +29,7 @@ if (is_string($image)) crash($image, 'restore-3');
 
 <h1>Restore</h1>
 <h3>Step 4: Choose restore options</h3>
-<p>Select which parts of the backup image to restore:</p>
+<p>Select which partitions of the backup image to restore:</p>
 
 <form id="redo_form" class="form-horizontal">
 
