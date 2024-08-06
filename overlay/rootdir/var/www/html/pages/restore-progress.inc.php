@@ -7,7 +7,7 @@ $status = get_status();
 
 <h1>Restore</h1>
 <h3>Restoring backup image</h3>
-<p>Writing system snapshot to the target drive.</p>
+<p>Writing backup image to the target drive.</p>
 
 <div class="row">
   <div class="col-sm-12">
