@@ -154,9 +154,9 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 			//loop through all child elements and check for RAID volume
 			if (property_exists($d, 'children')) {
 				foreach ($d->children as $c) {
-					if (str_starts_with($c->type, 'raid'){
+					if (str_starts_with($c->type, 'raid')){
 						//raid volume found so store volume id as option
-						$raid[$c->name] = $c->name . ":" . strtoupper($c->type) . ":" . $c->size;
+						$raid[$c->name] = $c->name . ": " . $c->size . " RAID Array (" . strtoupper($c->type) . ")";
 					}
 				}
 			}
