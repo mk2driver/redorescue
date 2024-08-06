@@ -130,7 +130,7 @@ function get_disk_model($dev) {
 }
 
 //
-// Get list of disks for dropdown
+// Get list of disks and raid volumes for dropdown
 //
 function get_disk_options($disks, $type_filter='/(^disk)/') {
 	$options = array();
@@ -149,19 +149,20 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 		$desc .= (empty($model)?"":", $model");
 		$options[$d->name] = "$d->name: ".$desc.(empty($os)?"":", $os");
 
-		//check if this disk is a RAID member
+		//check if this disk is a raid member
 		if (str_ends_with($d->fstype, '_raid_member')) {
-			//loop through all child elements and check for RAID volume
+			//loop through all child elements and check for raid volume
 			if (property_exists($d, 'children')) {
 				foreach ($d->children as $c) {
-					if (str_starts_with($c->type, 'raid')){
-						//raid volume found so store volume id as option
+					if (str_starts_with($c->type, 'raid') && !array_key_exists($c->name, $raid)){
+						//raid volume found and not already listed so store volume id as option
 						$raid[$c->name] = $c->name . ": " . $c->size . " RAID Array (" . strtoupper($c->type) . ")";
 					}
 				}
 			}
 		}			
 	}
+	//return all disks with raid volumes at end of list
 	return array_merge($options, $raid);
 }
 
