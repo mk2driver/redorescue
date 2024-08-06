@@ -26,8 +26,8 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
 ?>
 
 <h1>Backup</h1>
-<h3>Step 2: Select parts to save</h3>
-<p>Select which parts of the drive to include in the backup:</p>
+<h3>Step 2: Select partitions to save</h3>
+<p>Select which partitions of the drive to include in the backup:</p>
 
 <form id="redo_form" class="form-horizontal">
 
