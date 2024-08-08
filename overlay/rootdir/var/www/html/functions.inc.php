@@ -151,18 +151,24 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 
 		//check if this disk is a raid member
 		if (str_ends_with($d->fstype, '_raid_member')) {
-			//loop through all child elements and check for raid volume
+			//loop through all child elements and check for raid volumes
 			if (property_exists($d, 'children')) {
 				foreach ($d->children as $c) {
-					if (str_starts_with($c->type, 'raid') && !array_key_exists($c->name, $raid)){
-						//raid volume found so format description and save md id as option
-						$c->type = strtoupper($c->type);
-						$os = NULL; if (property_exists($d, 'os')) $os = $d->os;
-						$raid_desc = $c->size; //size of raid volume
-						$raid_desc .= (empty($d->tran)?"":" $d->tran"); //interface of parent disk
-						$raid_desc .= (empty($c->type)?"":" $c->type"); //raid type of raid volume
-						$raid_desc .= ", Software RAID Volume";
-						$raid[$c->name] = $c->name . ": " . $raid_desc . (empty($os)?"":", $os");
+					if (str_starts_with($c->type, 'raid')) {
+						//raid volume found so check if already in options list
+					    	if (array_key_exists($c->name, $raid)) {
+							//already in list so just add raid member disk id
+							$raid[$c->name] .= ", " . $d->name;
+					    	}else{
+							//not in list so create full description
+							$c->type = strtoupper($c->type);
+							$os = NULL; if (property_exists($d, 'os')) $os = $d->os;
+							$raid_desc = $c->size; //size of raid volume
+							$raid_desc .= (empty($d->tran)?"":" $d->tran"); //interface of parent disk
+							$raid_desc .= (empty($c->type)?"":" $c->type"); //raid type of raid volume
+							$raid_desc .= ", Software RAID Volume";
+							$raid[$c->name] = $c->name . ": " . $raid_desc . (empty($os)?"":", $os") . ", Member Disks: " . $d->name;
+						}
 					}
 				}
 			}
