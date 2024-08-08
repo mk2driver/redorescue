@@ -166,7 +166,6 @@ function get_disk_options($disks, $type_filter='/(^disk)/') {
 							$raid_desc = $c->size; //size of raid volume
 							$raid_desc .= (empty($d->tran)?"":" $d->tran"); //interface of parent disk
 							$raid_desc .= (empty($c->type)?"":" $c->type"); //raid type of raid volume
-							$raid_desc .= ", Software RAID Volume";
 							$raid[$c->name] = $c->name . ": " . $raid_desc . (empty($os)?"":", $os") . ", Member Disks: " . $d->name;
 						}
 					}
