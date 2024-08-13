@@ -106,11 +106,19 @@ function get_disks($force_refresh=FALSE) {
 			if ((strlen($part)>3) && (strlen($type)>3)) {
 				foreach ($list->blockdevices as &$l) {
 					if (property_exists($l, 'children')) {
-						//print "Disk ".$l->name." has partitions...\n";
+						//loop through partitions and check for device name match
 						foreach ($l->children as &$c) {
 							if ($c->name==$part) {
-								//print "* ".$c->name." is type $type.\n";
+								//overwrite partition description with partition type
 								$c->ptdesc = $type;
+							}
+
+							//check if this is a raid volume
+							if (str_starts_with($c->type, 'raid')) {
+								//if raid, loop through child elements for device name match
+								foreach($c->children as &$r) {
+									if ($r->name == $part) {$r->ptdesc = $type;}
+								}
 							}
 						}
 					}
