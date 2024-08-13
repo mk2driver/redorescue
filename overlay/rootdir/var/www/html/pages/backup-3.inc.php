@@ -24,7 +24,20 @@ set_status($status);
 
 // Load cached list of disks
 $disks = get_disks();
-foreach ($disks->blockdevices as $d) if ($d->name==$status->drive) $disk = $d;
+
+// Assign chosen disk or raid volume
+foreach ($disks->blockdevices as $d) {
+	// Check for raid member disk
+	if (str_ends_with($d->fstype, '_raid_member')) {
+		// raid member so test name of child volumes
+		foreach ($d->children as $c) {
+			if ($c->name == $status->drive) $disk = $c;
+		}
+	    }else{
+		// non-raid member disk
+		if ($d->name == $status->drive) $disk = $d;
+	}	
+}
 if (!isset($disk)) crash('Unable to read information for selected drive.');
 
 // Get partition options
