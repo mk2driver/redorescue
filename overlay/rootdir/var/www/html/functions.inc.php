@@ -615,7 +615,7 @@ function backup_init() {
 				//check if disk is a raid member
 				if (str_ends_with($d->fstype, '_raid_member')) {
 					foreach ($d->children as $c) if (str_starts_with($c->type, 'raid')) {
-						foreach ($c->children as $rp) {
+						foreach ($c->children as $rp) if ($rp->name == $p && !array_key_exists($p, $status->details)) {
 							$da = array();
 							if (!empty($rp->label)) $da[] = $rp->label;
 							if (!empty($rp->os)) $da[] = $rp->os;
