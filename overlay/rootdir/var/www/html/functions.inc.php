@@ -591,7 +591,7 @@ function backup_init() {
 	$disks = get_disks();
 	$status->bytes_total = 0;
 	$status->bytes_done = 0;
-	if (count(get_object_vars($status->parts))<1) return 'No partitions selected';
+	if (count($status->parts) < 1) return 'No partitions selected';
 	foreach ($status->parts as $p) {
 		$part_bytes = get_dev_bytes($p);
 		$status->bytes_total += $part_bytes;
@@ -633,6 +633,8 @@ function backup_init() {
 			}
 		}
 	}
+
+	if (count($status->details) < 1) return 'Unable to set partition details';
 	
 	$json_data = array(
 		'id'		=> $status->id,
