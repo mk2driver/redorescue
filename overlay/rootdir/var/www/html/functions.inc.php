@@ -101,6 +101,7 @@ function get_disks($force_refresh=FALSE) {
 		}
 		$typelist = explode(PHP_EOL, trim(shell_exec('fdisk -l -o Device,Type')));
 		foreach ($typelist as $t) if (preg_match('/^\/dev\//', $t)) {
+			print $t . "\n";
 			list($part, $type) = explode('  ', $t);
 			$part = str_replace('/dev/', '', $part);
 			if ((strlen($part)>3) && (strlen($type)>3)) {
