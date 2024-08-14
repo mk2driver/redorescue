@@ -111,15 +111,16 @@ function get_disks($force_refresh=FALSE) {
 							if ($c->name==$part) {
 								//overwrite partition description with partition type
 								$c->ptdesc = $type;
-							}
-
-							//check if this is a raid volume
-							if (str_starts_with($c->type, 'raid')) {
-								//if raid, loop through child elements for device name match
-								foreach($c->children as &$r) {
-									print "* ".$r->name." has $type partition type.\n";
-									if ($r->name == $part) {$r->ptdesc = $type;}
-									print "PTDESC = '" . $r->ptdesc . "' \n";
+							}else{
+								//partition name didn't match so check if this is a raid volume
+								//if so loop through child partitions and check for name match
+								if (str_starts_with($c->type, 'raid')) {
+									foreach ($c->children as &$r) {
+										if ($r->name == $part) {
+											$r->ptdesc = $part;
+											print "PART='" . $part ."' PTDESC='" . $r->ptdesc . "' \n";
+										}
+									}
 								}
 							}
 						}
