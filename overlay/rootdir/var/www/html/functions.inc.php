@@ -117,7 +117,9 @@ function get_disks($force_refresh=FALSE) {
 							if (str_starts_with($c->type, 'raid')) {
 								//if raid, loop through child elements for device name match
 								foreach($c->children as &$r) {
+									print "* ".$r->name." has $type partition type.\n";
 									if ($r->name == $part) {$r->ptdesc = $type;}
+									print "PTDESC = '" . $r->ptdesc . "' \n";
 								}
 							}
 						}
