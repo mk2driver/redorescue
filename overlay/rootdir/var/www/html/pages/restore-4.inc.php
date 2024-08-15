@@ -15,6 +15,17 @@ $all_disks = get_disks(TRUE);
 
 // Only show parts of the selected target drive
 $disks = new stdClass();
+foreach ($all_disks->blockdevices as $d) {
+	//check if raid member disk
+	if (str_ends_with($d->fstype, '_raid_member')) {
+		//raid member so loop through child volumes
+		foreach ($d->children as $c) {
+			//loop through raid volume partitions
+		}
+	}else{
+		
+	}
+}
 foreach ($all_disks->blockdevices as $e) if ($e->name==$status->drive)
 	foreach ($e->children as $c)
 		// Skip extended partitions
