@@ -19,19 +19,13 @@ foreach ($all_disks->blockdevices as $d) {
 	//check if raid member disk
 	if (str_ends_with($d->fstype, '_raid_member')) {
 		//raid member so loop through child volumes
-		foreach ($d->children as $c) {
-			//loop through raid volume partitions
-		}
+		foreach ($d->children as $c) { if ($c->name == $status->drive) {$disks->blockdevices[] = $c;} }
 	}else{
-		
+		//standard disk
+		if ($d->name == $status->drive) {$disks->blockdevices[] = $d;}
 	}
 }
-foreach ($all_disks->blockdevices as $e) if ($e->name==$status->drive)
-	foreach ($e->children as $c)
-		// Skip extended partitions
-		if ($c->parttype!=='0x5') $disks->blockdevices[] = $c;
-$options = get_part_options($disks, array(), '/.*/');
-$options = array(''=>'(None)') + $options;
+$options = array(''=>'(None)') + get_part_options($disks, array(), '/.*/');
 
 // Load image details
 $image = get_image_info();
