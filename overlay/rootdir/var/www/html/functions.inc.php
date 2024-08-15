@@ -80,6 +80,20 @@ function get_disks($force_refresh=FALSE) {
 		$disks = shell_exec('lsblk -JO');
 		$list = json_decode($disks) or die("Unable to read device list.");
 		$oslist = explode(PHP_EOL, trim(shell_exec('os-prober')));
+		
+		//initially null all os entries
+		foreach ($list->blockdevices as &$l) {
+			if (property_exists($l, 'children')) {
+				foreach ($l->children as &$c) {
+					if (str_starts_with($c->type, 'raid')) {
+						foreach ($l->children as &$r) {$r->os = null;}
+					}else{
+						$c->os = null;
+					}
+				}
+			}
+		}
+		
 		foreach ($oslist as $line) {
 			$osd = explode(':', $line);
 			if ((is_array($osd)) && (sizeof($osd)>2)) {
@@ -106,6 +120,7 @@ function get_disks($force_refresh=FALSE) {
 				}
 			}
 		}
+		
 		$typelist = explode(PHP_EOL, trim(shell_exec('fdisk -l -o Device,Type')));
 		foreach ($typelist as $t) if (preg_match('/^\/dev\//', $t)) {
 			list($part, $type) = explode(' ', $t, 2);
