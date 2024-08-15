@@ -108,22 +108,20 @@ function get_disks($force_refresh=FALSE) {
 			if ((strlen($part)>3) && (strlen($type)>3)) {
 				foreach ($list->blockdevices as &$l) {
 					if (property_exists($l, 'children')) {
-						//loop through partitions and check for device name match
+						//loop through partitions and check for name match
 						foreach ($l->children as &$c) {
-							if ($c->name==$part) {
-								//overwrite partition description with partition type
-								$c->ptdesc = $type;
-							}else{
-								//partition name didn't match so check if this is a raid volume
-								//if so loop through child partitions and check for name match
-								if (str_starts_with($c->type, 'raid')) {
-									foreach ($c->children as &$r) {
-										if ($r->name == $part) {
-											$r->ptdesc = $part;
-											print "PART='" . $part ."' PTDESC='" . $r->ptdesc . "' \n";
-										}
+							//check if this is a raid volume instead of regular partition
+							if (str_starts_with($c->type, 'raid')) {
+								//is a raid volume so loop through all partitions and check name
+								foreach ($c->children as &$r) {
+									if ($r->name == $part) {
+										$r->ptdesc = $type;
+										print "PART='" . $part ."' PTDESC='" . $r->ptdesc . "' ";
 									}
 								}
+							}else{
+								//regular partition so check for name match and overwrite type description
+								if ($c->name==$part) {$c->ptdesc = $type;}	
 							}
 						}
 					}
