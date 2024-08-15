@@ -57,10 +57,11 @@ if (is_string($image)) crash($image, 'restore-3');
 	<?php
 	foreach ($image->parts as $name=>$p) {
 		// Must also accommodate NVMe-style partition IDs
+		// MD RAID partition style added in v5.0.1
 		$part_pre = '';
 		preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
 		$part_num = $m[2];
-		if (preg_match('/^nvme/', $status->drive)) $part_pre = 'p';
+		if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) $part_pre = 'p';
 		$status->parts[$part] = $status->drive.$part_pre.$part_num;
 		$checked = 'checked';
 		print "<tr>";
