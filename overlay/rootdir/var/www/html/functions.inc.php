@@ -87,12 +87,19 @@ function get_disks($force_refresh=FALSE) {
 				$os = $osd[1];
 				foreach ($list->blockdevices as &$l) {
 					if (property_exists($l, 'children')) {
-						//print "Disk ".$l->name." has partitions...\n";
 						foreach ($l->children as &$c) {
-							if ($c->name==$part) {
-								//print "* ".$c->name." has $os installed.\n";
-								$c->os = $os;
-								$l->os = $os;
+							//check if this is a raid volume instead of regular partition
+							if (str_starts_with($c->type, 'raid')) {
+								//is a raid volume so loop through all child partitions and check name
+								foreach ($c->children as &$r) {
+									if ($r->name == $part) {$r->os = $os;}
+								}
+							}else{
+								//regular partition so check for name match and overwrite os name
+								if ($c->name==$part) {
+									$c->os = $os;
+									$l->os = $os;
+								}
 							}
 						}
 					}
@@ -104,7 +111,6 @@ function get_disks($force_refresh=FALSE) {
 			list($part, $type) = explode(' ', $t, 2);
 			$part = str_replace('/dev/', '', $part);
 			$type = trim($type);
-			print $part . " ";
 			if ((strlen($part)>3) && (strlen($type)>3)) {
 				foreach ($list->blockdevices as &$l) {
 					if (property_exists($l, 'children')) {
@@ -112,12 +118,9 @@ function get_disks($force_refresh=FALSE) {
 						foreach ($l->children as &$c) {
 							//check if this is a raid volume instead of regular partition
 							if (str_starts_with($c->type, 'raid')) {
-								//is a raid volume so loop through all partitions and check name
+								//is a raid volume so loop through all child partitions and check name
 								foreach ($c->children as &$r) {
-									if ($r->name == $part) {
-										$r->ptdesc = $type;
-										print "PART='" . $part ."' PTDESC='" . $r->ptdesc . "' ";
-									}
+									if ($r->name == $part) {$r->ptdesc = $type;}
 								}
 							}else{
 								//regular partition so check for name match and overwrite type description
