@@ -58,11 +58,10 @@ if (is_string($image)) crash($image, 'restore-3');
 	foreach ($image->parts as $name=>$p) {
 		// Must also accommodate NVMe-style partition IDs
 		// MD RAID partition style added in v5.0.1
-		$part_pre = '';
 		preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
-		$part_num = $m[2];
-		if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) $part_pre = 'p';
-		$status->parts[$part] = $status->drive.$part_pre.$part_num;
+		$new_part_name = $status->drive . $m[2];
+		if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) {$new_part_name = $status->drive . "p" . $m[2];}
+		$status->parts[$new_part_name] = $new_part_name;
 		$checked = 'checked';
 		print "<tr>";
 		print "  <td><input type='checkbox' $checked name='baremetal_parts[]' id='baremetal_$name' value='$name'></td>";
@@ -72,7 +71,7 @@ if (is_string($image)) crash($image, 'restore-3');
 		print "  <td nowrap>$p->fs</td>";
 		print "  <td>$p->desc</td>";
 		print "  <td><i class='fas fa-arrow-right text-muted'></i></td>";
-		print "  <td>$status->drive$part_pre$part_num</td>";
+		print "  <td>$new_part_name</td>";
 		print "</tr>";
 	}
 	?>
