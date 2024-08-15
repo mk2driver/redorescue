@@ -79,8 +79,6 @@ if (is_string($image)) crash($image, 'restore-3');
 		print "  <td>$new_part_name</td>";
 		print "</tr>";
 	}
-	// Save status
-	set_status($status);
 	?>
         </tbody>
       </table>
