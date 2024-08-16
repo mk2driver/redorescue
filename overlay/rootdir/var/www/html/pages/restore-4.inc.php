@@ -24,6 +24,7 @@ foreach ($all_disks->blockdevices as $d) {
 		//standard disk
 		if ($d->name == $status->drive) {$disks->blockdevices[] = $d;}
 	}
+	if (property_exists($disks, 'blockdevices')) {break;}
 }
 $options = array(''=>'(None)') + get_part_options($disks, array(), '/.*/');
 
