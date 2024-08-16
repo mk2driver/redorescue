@@ -12,7 +12,7 @@ unset($status->drive);
 set_status($status);
 
 // Force refresh the list of disks 
-$disks = get_disks(FALSE);
+$disks = get_disks(TRUE);
 
 // Get list of disk options
 $disk_options = get_disk_options($disks);
