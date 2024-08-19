@@ -865,7 +865,7 @@ function backup_part($dev) {
 	if ($fs_tool!='dd') $fs_mode = "--clone";
 	$cmd = "partclone.$fs_tool $fs_mode --force --UI-fresh 1 --logfile ".TMP_DIR."$dev.log ";
 	$cmd .= " --source /dev/$dev --no_block_detail ";
-	$cmd .= " | pigz --stdout ";
+	$cmd .= " | zstd --stdout ";
 	$cmd .= " | split --numeric-suffixes=1 --suffix-length=3 --additional-suffix=.img --bytes=4096M - ";
 	$cmd .= escape_path(sane_path($status->dir)).'/'.$status->id.'_'.$dev.'_';
 	file_put_contents(CMD_FILE, $cmd);
@@ -896,7 +896,7 @@ function restore_part($src, $dst=NULL) {
 		$image_files = $prefix_path.'_part'.$part_num.'.???';
 	}
 	$cmd = "cat $image_files ";
-	$cmd .= " | pigz --decompress --stdout ";
+	if ($status->image->compression == 'zstd') {$cmd .= " | zstd --decompress --stdout ";} else {$cmd .= " | pigz --decompress --stdout ";}
 	$cmd .= " | partclone.$fs_tool --restore --force --UI-fresh 1 ";
 	$cmd .= " --logfile ".TMP_DIR."$src.log --overwrite /dev/$dst --no_block_detail";
 	file_put_contents(CMD_FILE, $cmd);
@@ -922,7 +922,7 @@ function verify_part($src) {
 		$image_files = $prefix_path.'_part'.$part_num.'.???';
 	}
 	$cmd = "cat $image_files ";
-	$cmd .= " | pigz --decompress --stdout ";
+	if ($status->image->compression == 'zstd') {$cmd .= " | zstd --decompress --stdout ";} else {$cmd .= " | pigz --decompress --stdout ";}
 	$cmd .= " | partclone.chkimg --force --UI-fresh 1 --source - ";
 	$cmd .= " --logfile ".TMP_DIR."$src.log --no_block_detail";
 	file_put_contents(CMD_FILE, $cmd);
