@@ -664,6 +664,7 @@ function backup_init() {
 		'notes'		=> $status->notes,
 		'drive_bytes'	=> get_dev_bytes($status->drive),
 		'parts'		=> $status->details,
+		'compression'	=> 'zstd',
 		'mbr_bin'	=> base64_encode(extract_mbr($status->drive)),
 		'sfd_bin'	=> base64_encode(extract_sfd($status->drive)),
 	);
