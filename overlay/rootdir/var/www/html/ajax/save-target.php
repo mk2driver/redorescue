@@ -24,13 +24,20 @@ case 'verify':
 case 'baremetal':
 	foreach ($_REQUEST['baremetal_parts'] as $part) {
 		$part = sane_dev($part);
-		// Target partitions remapped to target drive + part number
-		// Must also accommodate NVMe-style and MD RAID partition IDs
-		$part_pre = '';
-		preg_match('/(.+\D+)(\d+)$/', $part, $m);  // $m[2] contains the part_num
-		$part_num = $m[2];
-		if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) $part_pre = 'p';
-		$status->parts[$part] = $status->drive.$part_pre.$part_num;
+		//first and only partition will have type 'Whole Disk' if is a whole disk dd image
+		if ($status->image->parts->$part->type == 'Whole Disk') {
+			//whole disk dd image
+			$status->parts[$part] = $status->drive;
+		}else{
+			//partition restore
+			// Target partitions remapped to target drive + part number
+			// Must also accommodate NVMe-style and MD RAID partition IDs
+			$part_pre = '';
+			preg_match('/(.+\D+)(\d+)$/', $part, $m);  // $m[2] contains the part_num
+			$part_num = $m[2];
+			if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) $part_pre = 'p';
+			$status->parts[$part] = $status->drive.$part_pre.$part_num;
+		}
 	}
 	$size_diff = $status->drive_bytes - $status->image->drive_bytes;
 	if ($size_diff < 0)
