@@ -718,28 +718,33 @@ function restore_init() {
 	set_status($status);
 	shell_exec("truncate -s 0 ".LOG_FILE);
 	if ($status->type=='baremetal') {
-		// Restore MBR and partition table
-		$mbr = tempnam(TMP_DIR, 'mbr_');
-		file_put_contents($mbr, base64_decode($status->image->mbr_bin));
-		$sfd = tempnam(TMP_DIR, 'sfd_');
-		file_put_contents($sfd, base64_decode($status->image->sfd_bin));
-		if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
-		$log = shell_exec("wipefs --all --force /dev/".$status->drive);
-		$log .= sleep(0.5);
-		$log .= shell_exec("dd if=$mbr of=/dev/".$status->drive." bs=32768 count=1 2>&1");
-		$log .= shell_exec("sync");
-		$log .= sleep(0.5);
-		$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
-		$log .= shell_exec("sync");
-		$log .= sleep(0.5);
-		$log .= shell_exec("partprobe /dev/".$status->drive);
-		$log .= sleep(0.5);
-		@unlink($mbr);
-		@unlink($sfd);
-		file_put_contents(LOG_FILE, $log, FILE_APPEND);
-		if (isset($status->source)) {
+		// Restore MBR and partition table but only if partition is not a whole disk image
+		if ($status->drive == $status->parts[0]) {
+			$log = 'Whole disk dd restore so skipping MBR and Partition Table restoration';
+			file_put_contents(LOG_FILE, $log, FILE_APPEND);
+		}else{
+			$mbr = tempnam(TMP_DIR, 'mbr_');
+			file_put_contents($mbr, base64_decode($status->image->mbr_bin));
+			$sfd = tempnam(TMP_DIR, 'sfd_');
+			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
+			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
+			$log = shell_exec("wipefs --all --force /dev/".$status->drive);
+			$log .= sleep(0.5);
+			$log .= shell_exec("dd if=$mbr of=/dev/".$status->drive." bs=32768 count=1 2>&1");
+			$log .= shell_exec("sync");
+			$log .= sleep(0.5);
+			$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
+			$log .= shell_exec("sync");
+			$log .= sleep(0.5);
+			$log .= shell_exec("partprobe /dev/".$status->drive);
+			$log .= sleep(0.5);
+			@unlink($mbr);
+			@unlink($sfd);
+			file_put_contents(LOG_FILE, $log, FILE_APPEND);
+			if (isset($status->source)) {
 			$vars = array('type'=>'local', 'local_part'=>$status->source);
 			mount_drive($vars);
+			}
 		}
 	}
 	foreach ((array) $status->parts as $src=>$dst) {
