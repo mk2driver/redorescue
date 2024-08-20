@@ -47,14 +47,13 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
 $fsuse_var = 'fsuse%';
 
 //list whole disk as an option for dd imaging
-$notice = ' <a data-toggle="tooltip" title="This disk has no recognised partitions.  The entire disk will be imaged block by block."><i class="fas fa-lock text-success"></i></a>';
-print "<tr".(empty($notice)?'':' class="info"').">";
+print "<tr>";
 print "  <td><input type='checkbox' name='parts[]' id='$disk->name' value='$disk->name'></td>";
 print "  <td>$disk->name</td>";
 print "  <td>$disk->size</td>";
-print "  <td nowrap>Raw Disk</td>";
-print "  <td nowrap>All</td>";
-print "  <td>Block by block image of entire disk.</td>";
+print "  <td nowrap>Raw disk data</td>";
+print "  <td nowrap>N/A</td>";
+print "  <td>Block by block copy of entire disk.</td>";
 print "</tr>";
 
 foreach ($disk->children as $p) {
