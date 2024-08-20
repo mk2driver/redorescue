@@ -613,41 +613,57 @@ function backup_init() {
 	$status->bytes_total = 0;
 	$status->bytes_done = 0;
 	if (count($status->parts) < 1) return 'No partitions selected';
-	foreach ($status->parts as $p) {
-		$part_bytes = get_dev_bytes($p);
-		$status->bytes_total += $part_bytes;
-		foreach ($disks->blockdevices as $d) {
-			if ($d->name==$status->drive) {
-				//disk is a non-raid member
-				foreach ($d->children as $c) if ($c->name==$p) {
-					$da = array();
-					if (!empty($c->label)) $da[] = $c->label;
-					if (!empty($c->os)) $da[] = $c->os;
-					$desc = trim(implode(' ', $da));
-					$status->details[$p] = array(
-						'bytes'	=> $part_bytes,
-						'size'	=> $c->size,
-						'type'	=> $c->ptdesc,
-						'fs'	=> $c->fstype,
-						'desc'	=> $desc,
-					);
-				}
-			}else{
-				//check if disk is a raid member
-				if (str_ends_with($d->fstype, '_raid_member')) {
-					foreach ($d->children as $c) if (str_starts_with($c->type, 'raid')) {
-						foreach ($c->children as $rp) if ($rp->name == $p) {
-							$da = array();
-							if (!empty($rp->label)) $da[] = $rp->label;
-							if (!empty($rp->os)) $da[] = $rp->os;
-							$desc = trim(implode(' ', $da));
-							$status->details[$p] = array(
-								'bytes'	=> $part_bytes,
-								'size'	=> $rp->size,
-								'type'	=> $rp->ptdesc,
-								'fs'	=> $rp->fstype,
-								'desc'	=> $desc,
-							);
+
+	//check for whole disk backup
+	if (count($status->parts) == 1 && !is_numeric(substr($status->parts[0], -1, 1))) {
+		//whole disk dd image backup
+		$part_bytes = get_dev_bytes($status->parts[0]);
+		$status->bytes_total = $part_bytes;
+		$status->details[$p] = array(
+			'bytes'	=> $part_bytes,
+			'size'	=> round(($part_bytes/1000000),2) . 'MB',
+			'type'	=> 'Whole Disk',
+			'fs'	=> 'Unknown',
+			'desc'	=> 'Block by block copy of whole disk',
+		);
+	}else{
+		//partition backup
+		foreach ($status->parts as $p) {
+			$part_bytes = get_dev_bytes($p);
+			$status->bytes_total += $part_bytes;
+			foreach ($disks->blockdevices as $d) {
+				if ($d->name==$status->drive) {
+					//disk is a non-raid member
+					foreach ($d->children as $c) if ($c->name==$p) {
+						$da = array();
+						if (!empty($c->label)) $da[] = $c->label;
+						if (!empty($c->os)) $da[] = $c->os;
+						$desc = trim(implode(' ', $da));
+						$status->details[$p] = array(
+							'bytes'	=> $part_bytes,
+							'size'	=> $c->size,
+							'type'	=> $c->ptdesc,
+							'fs'	=> $c->fstype,
+							'desc'	=> $desc,
+						);
+					}
+				}else{
+					//check if disk is a raid member
+					if (str_ends_with($d->fstype, '_raid_member')) {
+						foreach ($d->children as $c) if (str_starts_with($c->type, 'raid')) {
+							foreach ($c->children as $rp) if ($rp->name == $p) {
+								$da = array();
+								if (!empty($rp->label)) $da[] = $rp->label;
+								if (!empty($rp->os)) $da[] = $rp->os;
+								$desc = trim(implode(' ', $da));
+								$status->details[$p] = array(
+									'bytes'	=> $part_bytes,
+									'size'	=> $rp->size,
+									'type'	=> $rp->ptdesc,
+									'fs'	=> $rp->fstype,
+									'desc'	=> $desc,
+								);
+							}
 						}
 					}
 				}
