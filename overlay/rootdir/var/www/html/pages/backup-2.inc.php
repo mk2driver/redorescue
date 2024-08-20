@@ -53,7 +53,7 @@ print "  <td>$disk->name</td>";
 print "  <td>$disk->size</td>";
 print "  <td nowrap>Raw disk data</td>";
 print "  <td nowrap>N/A</td>";
-print "  <td>Block by block copy of entire disk.</td>";
+print "  <td>Block by block backup of entire disk.</td>";
 print "</tr>";
 
 foreach ($disk->children as $p) {
