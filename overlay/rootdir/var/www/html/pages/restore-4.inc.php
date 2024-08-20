@@ -66,6 +66,7 @@ if (is_string($image)) crash($image, 'restore-3');
 		preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
 		$new_part_name = $status->drive . $m[2];
 		if (preg_match('/^nvme/', $status->drive) || preg_match('/^md/', $status->drive)) {$new_part_name = $status->drive . "p" . $m[2];}
+		if ($p->type == 'Whole Disk') {$new_part_name = $status->drive}
 		$checked = 'checked';
 		print "<tr>";
 		print "  <td><input type='checkbox' $checked name='baremetal_parts[]' id='baremetal_$name' value='$name'></td>";
