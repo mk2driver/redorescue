@@ -615,11 +615,11 @@ function backup_init() {
 	if (count($status->parts) < 1) return 'No partitions selected';
 
 	//check for whole disk backup
-	if (count($status->parts) == 1 && !is_numeric(substr($status->parts[0], -1, 1))) {
+	if (count($status->parts) == 1 && ($status->parts[0] == $status->drive)) {
 		//whole disk dd image backup
-		$part_bytes = get_dev_bytes($status->parts[0]);
+		$part_bytes = get_dev_bytes($status->drive);
 		$status->bytes_total = $part_bytes;
-		$status->details[$p] = array(
+		$status->details[$status->drive] = array(
 			'bytes'	=> $part_bytes,
 			'size'	=> round(($part_bytes/1000000),2) . 'MB',
 			'type'	=> 'Whole Disk',
