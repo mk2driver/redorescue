@@ -724,7 +724,7 @@ function restore_init() {
 	if ($status->type=='baremetal') {
 		// Restore MBR and partition table but only if partition is not a whole disk image
 		if ($whole_disk_dd == TRUE) {
-			$log = 'Whole disk dd restore so skipping MBR and Partition Table restoration.\n';
+			$log = "Whole disk dd restore so skipping MBR and Partition Table restoration.\n";
 			file_put_contents(LOG_FILE, $log, FILE_APPEND);
 		}else{
 			$mbr = tempnam(TMP_DIR, 'mbr_');
