@@ -719,7 +719,7 @@ function restore_init() {
 	shell_exec("truncate -s 0 ".LOG_FILE);
 	if ($status->type=='baremetal') {
 		// Restore MBR and partition table but only if partition is not a whole disk image
-		if ($status->drive == $status->parts[0]) {
+		if ($status->image->parts->0->type == 'Whole Disk') {
 			$log = 'Whole disk dd restore so skipping MBR and Partition Table restoration';
 			file_put_contents(LOG_FILE, $log, FILE_APPEND);
 		}else{
