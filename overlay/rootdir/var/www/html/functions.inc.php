@@ -715,7 +715,7 @@ function restore_init() {
 	$whole_disk_dd = FALSE;
 	foreach ($status->parts as $sp=>$tp) {
 		$status->bytes_total += $status->image->parts->$sp->bytes;
-		if ($status->image->parts-$sp->type == 'Whole Disk') $whole_disk_dd = TRUE;
+		if ($status->image->parts->$sp->type == 'Whole Disk') $whole_disk_dd = TRUE;
 	}
 	
 	$status->logline = 0;
