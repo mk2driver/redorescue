@@ -711,15 +711,19 @@ function restore_init() {
 	$status->bytes_total = 0;
 	$status->bytes_done = 0;
 	if (count(get_object_vars($status->parts))<1) return 'No partitions selected';
+
+	$whole_disk_dd = FALSE;
 	foreach ($status->parts as $sp=>$tp) {
 		$status->bytes_total += $status->image->parts->$sp->bytes;
+		if ($status->image->parts-$sp->type == 'Whole Disk') $whole_disk_dd = TRUE;
 	}
+	
 	$status->logline = 0;
 	set_status($status);
 	shell_exec("truncate -s 0 ".LOG_FILE);
 	if ($status->type=='baremetal') {
 		// Restore MBR and partition table but only if partition is not a whole disk image
-		if ($status->image->parts->0->type == 'Whole Disk') {
+		if ($whole_disk_dd == TRUE) {
 			$log = 'Whole disk dd restore so skipping MBR and Partition Table restoration';
 			file_put_contents(LOG_FILE, $log, FILE_APPEND);
 		}else{
