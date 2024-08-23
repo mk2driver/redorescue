@@ -28,9 +28,9 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
 <h1>Backup</h1>
 <h3>Step 2: Select partition data to save</h3>
 <p>Select which partition's data to include in the backup:</p>
-<p>NOTE: The disk's partition table and boot record is always backed up so ALL partitions will be restored.  The options below set whether the DATA inside these
-partitions will be backed up.  If the disk contains non-standard partitions it's best to choose the 'Whole Disk Image' option as this will image the
-entire contents of the disk, regardless of the type of data or partition structure.</p>
+<p>NOTE: The disk's partition table and boot record are always backed up so ALL partitions will be restored.  The options below set whether the file system and
+data inside these partitions will be backed up.  If the disk contains non-standard partitions it's best to choose the 'Whole Disk Image' option as this will backup the
+entire contents of the disk, regardless of partition structure or file systems in use.</p>
 
 <form id="redo_form" class="form-horizontal">
 
