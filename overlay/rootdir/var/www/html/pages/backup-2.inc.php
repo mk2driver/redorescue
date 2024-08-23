@@ -46,6 +46,17 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
 	    
 <?php
 $fsuse_var = 'fsuse%';
+
+//list whole disk as an option for dd imaging
+print "<tr>";
+print "  <td><input type='checkbox' name='parts[]' id='$disk->name' value='$disk->name'></td>";
+print "  <td>$disk->name</td>";
+print "  <td>$disk->size</td>";
+print "  <td nowrap>Raw disk data</td>";
+print "  <td nowrap>N/A</td>";
+print "  <td>Block by block backup of entire disk.</td>";
+print "</tr>";
+
 foreach ($disk->children as $p) {
 	if ($p->parttype=='0x5') continue;
 	$pct = '';

@@ -59,7 +59,7 @@ if (sizeof($status->progress->exec) > 0) {
 		if (preg_match('/^Elapsed.*%$/', $l))
 			$return['details'] = 'Finding areas with data... '.trim($l, ',');
 		if (preg_match('/^File system:\s+(.*)$/', $l, $matches))
-			$return['part_mode'] = $matches[1];
+			$return['part_mode'] = ucfirst($matches[1]);
 		if (preg_match('/^Device size:\s+(.*) =/', $l, $matches))
 			$return['part_size'] = str_replace(' ', '', $matches[1]);
 		if (preg_match('/^Space in use:\s+(.*) =/', $l, $matches))

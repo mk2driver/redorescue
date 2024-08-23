@@ -13,6 +13,14 @@ set_status($status);
 // Load image details
 $image = get_image_info();
 if (is_string($image)) crash($image, 'verify-2');
+
+//check for whole disk dd image
+foreach ($image->parts as $name=>$p) {
+	if ($p->type == 'Whole Disk') {
+		crash('Unable to verify raw, whole disk images.  Please select a partition based image instead.', 'verify-2');
+		break;
+	}
+}
 ?>
 
 <h1>Verify</h1>

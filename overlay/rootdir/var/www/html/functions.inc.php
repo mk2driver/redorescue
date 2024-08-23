@@ -613,41 +613,57 @@ function backup_init() {
 	$status->bytes_total = 0;
 	$status->bytes_done = 0;
 	if (count($status->parts) < 1) return 'No partitions selected';
-	foreach ($status->parts as $p) {
-		$part_bytes = get_dev_bytes($p);
-		$status->bytes_total += $part_bytes;
-		foreach ($disks->blockdevices as $d) {
-			if ($d->name==$status->drive) {
-				//disk is a non-raid member
-				foreach ($d->children as $c) if ($c->name==$p) {
-					$da = array();
-					if (!empty($c->label)) $da[] = $c->label;
-					if (!empty($c->os)) $da[] = $c->os;
-					$desc = trim(implode(' ', $da));
-					$status->details[$p] = array(
-						'bytes'	=> $part_bytes,
-						'size'	=> $c->size,
-						'type'	=> $c->ptdesc,
-						'fs'	=> $c->fstype,
-						'desc'	=> $desc,
-					);
-				}
-			}else{
-				//check if disk is a raid member
-				if (str_ends_with($d->fstype, '_raid_member')) {
-					foreach ($d->children as $c) if (str_starts_with($c->type, 'raid')) {
-						foreach ($c->children as $rp) if ($rp->name == $p) {
-							$da = array();
-							if (!empty($rp->label)) $da[] = $rp->label;
-							if (!empty($rp->os)) $da[] = $rp->os;
-							$desc = trim(implode(' ', $da));
-							$status->details[$p] = array(
-								'bytes'	=> $part_bytes,
-								'size'	=> $rp->size,
-								'type'	=> $rp->ptdesc,
-								'fs'	=> $rp->fstype,
-								'desc'	=> $desc,
-							);
+
+	//check for whole disk backup
+	if (count($status->parts) == 1 && ($status->parts[0] == $status->drive)) {
+		//whole disk dd image backup
+		$part_bytes = get_dev_bytes($status->drive);
+		$status->bytes_total = $part_bytes;
+		$status->details[$status->drive] = array(
+			'bytes'	=> $part_bytes,
+			'size'	=> round(($part_bytes/1000000000),1) . 'G',
+			'type'	=> 'Whole Disk',
+			'fs'	=> 'Unknown',
+			'desc'	=> 'Block by block copy of whole disk',
+		);
+	}else{
+		//partition backup
+		foreach ($status->parts as $p) {
+			$part_bytes = get_dev_bytes($p);
+			$status->bytes_total += $part_bytes;
+			foreach ($disks->blockdevices as $d) {
+				if ($d->name==$status->drive) {
+					//disk is a non-raid member
+					foreach ($d->children as $c) if ($c->name==$p) {
+						$da = array();
+						if (!empty($c->label)) $da[] = $c->label;
+						if (!empty($c->os)) $da[] = $c->os;
+						$desc = trim(implode(' ', $da));
+						$status->details[$p] = array(
+							'bytes'	=> $part_bytes,
+							'size'	=> $c->size,
+							'type'	=> $c->ptdesc,
+							'fs'	=> $c->fstype,
+							'desc'	=> $desc,
+						);
+					}
+				}else{
+					//check if disk is a raid member
+					if (str_ends_with($d->fstype, '_raid_member')) {
+						foreach ($d->children as $c) if (str_starts_with($c->type, 'raid')) {
+							foreach ($c->children as $rp) if ($rp->name == $p) {
+								$da = array();
+								if (!empty($rp->label)) $da[] = $rp->label;
+								if (!empty($rp->os)) $da[] = $rp->os;
+								$desc = trim(implode(' ', $da));
+								$status->details[$p] = array(
+									'bytes'	=> $part_bytes,
+									'size'	=> $rp->size,
+									'type'	=> $rp->ptdesc,
+									'fs'	=> $rp->fstype,
+									'desc'	=> $desc,
+								);
+							}
 						}
 					}
 				}
@@ -695,35 +711,44 @@ function restore_init() {
 	$status->bytes_total = 0;
 	$status->bytes_done = 0;
 	if (count(get_object_vars($status->parts))<1) return 'No partitions selected';
+
+	$whole_disk_dd = FALSE;
 	foreach ($status->parts as $sp=>$tp) {
 		$status->bytes_total += $status->image->parts->$sp->bytes;
+		if ($status->image->parts->$sp->type == 'Whole Disk') $whole_disk_dd = TRUE;
 	}
+	
 	$status->logline = 0;
 	set_status($status);
 	shell_exec("truncate -s 0 ".LOG_FILE);
 	if ($status->type=='baremetal') {
-		// Restore MBR and partition table
-		$mbr = tempnam(TMP_DIR, 'mbr_');
-		file_put_contents($mbr, base64_decode($status->image->mbr_bin));
-		$sfd = tempnam(TMP_DIR, 'sfd_');
-		file_put_contents($sfd, base64_decode($status->image->sfd_bin));
-		if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
-		$log = shell_exec("wipefs --all --force /dev/".$status->drive);
-		$log .= sleep(0.5);
-		$log .= shell_exec("dd if=$mbr of=/dev/".$status->drive." bs=32768 count=1 2>&1");
-		$log .= shell_exec("sync");
-		$log .= sleep(0.5);
-		$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
-		$log .= shell_exec("sync");
-		$log .= sleep(0.5);
-		$log .= shell_exec("partprobe /dev/".$status->drive);
-		$log .= sleep(0.5);
-		@unlink($mbr);
-		@unlink($sfd);
-		file_put_contents(LOG_FILE, $log, FILE_APPEND);
-		if (isset($status->source)) {
+		// Restore MBR and partition table but only if partition is not a whole disk image
+		if ($whole_disk_dd == TRUE) {
+			$log = "Whole disk dd restore so skipping MBR and Partition Table restoration.\n";
+			file_put_contents(LOG_FILE, $log, FILE_APPEND);
+		}else{
+			$mbr = tempnam(TMP_DIR, 'mbr_');
+			file_put_contents($mbr, base64_decode($status->image->mbr_bin));
+			$sfd = tempnam(TMP_DIR, 'sfd_');
+			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
+			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
+			$log = shell_exec("wipefs --all --force /dev/".$status->drive);
+			$log .= sleep(0.5);
+			$log .= shell_exec("dd if=$mbr of=/dev/".$status->drive." bs=32768 count=1 2>&1");
+			$log .= shell_exec("sync");
+			$log .= sleep(0.5);
+			$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
+			$log .= shell_exec("sync");
+			$log .= sleep(0.5);
+			$log .= shell_exec("partprobe /dev/".$status->drive);
+			$log .= sleep(0.5);
+			@unlink($mbr);
+			@unlink($sfd);
+			file_put_contents(LOG_FILE, $log, FILE_APPEND);
+			if (isset($status->source)) {
 			$vars = array('type'=>'local', 'local_part'=>$status->source);
 			mount_drive($vars);
+			}
 		}
 	}
 	foreach ((array) $status->parts as $src=>$dst) {

@@ -19,6 +19,10 @@ if (array_key_exists('parts', $_REQUEST)) {
 }
 if (sizeof($status->parts)==0) crash($err, $err_link);
 
+//check that only one part is selected if whole disk is to be imaged
+$err = "Individual partitions cannot be selected if whole disk backup option is selected.";
+if ($status->parts[0] == $status->drive && count($status->parts) > 1) crash($err, $err_link);
+
 // Save status
 set_status($status);
 

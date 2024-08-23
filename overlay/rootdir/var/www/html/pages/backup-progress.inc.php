@@ -22,6 +22,7 @@
       <th>Part</th>
       <th>Done</th>
       <th>Size/Used</th>
+      <th>Type</th>
       <th>Elapsed</th>
       <th>Remaining</th>
       <th>Speed</th>
@@ -36,8 +37,8 @@
       <td>
         <span id="part_size"><span class="text-muted">0GB</span></span>
         <span id="part_used"><span class="text-muted">/ 0GB</span></span>
-        <span id="part_mode"><span class="text-muted">raw</span></span>
       </td>
+      <td><span id="part_mode"><span class="text-muted">Raw</span></span></td>
       <td><span id="time_elapsed"><span class="text-muted">00:00:00</span></span></td>
       <td><span id="time_remaining"><span class="text-muted">00:00:00</span></span></td>
       <td><span id="speed"><span class="text-muted">0GB/min</span></span></td>
