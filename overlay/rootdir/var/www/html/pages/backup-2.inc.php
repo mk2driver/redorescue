@@ -86,7 +86,7 @@ foreach ($disk->children as $p) {
 	print "<tr".(empty($notice)?'':' class="info"').">";
 	print "  <td><input type='checkbox' $checked name='parts[]' id='part_$p->name' value='$p->name'></td>";
 	print "  <td>$p->name</td>";
-	print "  <td>$p->size</td>";
+	print "  <td>$p->sizeB</td>";
 	print "  <td nowrap>$p->ptdesc</td>";
 	print "  <td nowrap>$p->fstype$notice</td>";
 	print "  <td>$desc</td>";
