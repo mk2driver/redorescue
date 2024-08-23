@@ -67,11 +67,9 @@ foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_
         </thead>
         <tbody>
 	<?php
-	$show_selective = TRUE;
 	foreach ($image->parts as $name=>$p) {
 		if ($whole_disk_image) {
 			$new_part_name = $status->drive;
-			break;
 		}else{
 			// Must also accommodate NVMe-style and MD RAID partition IDs
 			preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
