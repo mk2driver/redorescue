@@ -621,9 +621,9 @@ function backup_init() {
 		$status->bytes_total = $part_bytes;
 		$status->details[$status->drive] = array(
 			'bytes'	=> $part_bytes,
-			'size'	=> round(($part_bytes/1000000000),1) . 'G',
+			'size'	=> round(($part_bytes/1000000000),1) . 'GB',
 			'type'	=> 'Whole Disk',
-			'fs'	=> 'Unknown',
+			'fs'	=> 'Raw',
 			'desc'	=> 'Block by block copy of whole disk',
 		);
 	}else{
