@@ -26,8 +26,11 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
 ?>
 
 <h1>Backup</h1>
-<h3>Step 2: Select partitions to save</h3>
-<p>Select which partitions of the drive to include in the backup:</p>
+<h3>Step 2: Select partition data to save</h3>
+<p>Select which partition's data to include in the backup:</p>
+<p>NOTE: The disk's partition table and boot record is always backed up so ALL partitions will be restored.  The options below set whether the DATA inside these
+partitions will be backed up.  If the disk contains non-standard partitions it's best to choose the 'Whole Disk Image' option as this will image the
+entire contents of the disk, regardless of the type of data or partition structure.</p>
 
 <form id="redo_form" class="form-horizontal">
 
@@ -52,9 +55,9 @@ print "<tr>";
 print "  <td><input type='checkbox' name='parts[]' id='$disk->name' value='$disk->name'></td>";
 print "  <td>$disk->name</td>";
 print "  <td>$disk->size</td>";
-print "  <td nowrap>Raw disk data</td>";
+print "  <td nowrap>Whole Disk Image</td>";
 print "  <td nowrap>N/A</td>";
-print "  <td>Block by block backup of entire disk.</td>";
+print "  <td>Block by block image of entire disk.</td>";
 print "</tr>";
 
 foreach ($disk->children as $p) {
