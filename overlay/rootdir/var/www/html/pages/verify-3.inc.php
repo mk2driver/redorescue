@@ -17,7 +17,7 @@ if (is_string($image)) crash($image, 'verify-2');
 //check for whole disk dd image
 foreach ($image->parts as $name=>$p) {
 	if ($p->type == 'Whole Disk') {
-		crash($image, 'verify-2');
+		crash('Unable to verify raw, whole disk images.  Please select a partition based image instead., 'verify-2');
 		break;
 	}
 }
