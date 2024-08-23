@@ -41,7 +41,7 @@ foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_
 <h3>Step 4: Choose restore options</h3>
 <p>Select which partition's data to restore:</p>
 <p>NOTE: If using the 'Full System Recovery' tab, but restoring selected partitions only, the original disk's boot record and partition table will also be copied to the destination 
-disk.  This will ensure the partition structure on the new disk is the same as the original.  The partition options below will set whether the DATA inside those partitions is also 
+disk.  This ensures the partition structure on the new disk is the same as the original.  The options below will set whether the file system and data inside those partitions is 
 restored.  If using the 'Restore Data Only' tab, the boot record and partition table is not restored.</p>
 
 <form id="redo_form" class="form-horizontal">
