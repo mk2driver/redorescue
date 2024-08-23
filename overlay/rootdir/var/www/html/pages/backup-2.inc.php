@@ -54,7 +54,7 @@ $fsuse_var = 'fsuse%';
 print "<tr>";
 print "  <td><input type='checkbox' name='parts[]' id='$disk->name' value='$disk->name'></td>";
 print "  <td>$disk->name</td>";
-print "  <td>$disk->size</td>";
+print "  <td>" . $disk->size . "B</td>";
 print "  <td nowrap>Whole Disk Image</td>";
 print "  <td nowrap>N/A</td>";
 print "  <td>Block by block image of entire disk.</td>";
