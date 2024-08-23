@@ -39,14 +39,17 @@ foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_
 
 <h1>Restore</h1>
 <h3>Step 4: Choose restore options</h3>
-<p>Select which partitions of the backup image to restore:</p>
+<p>Select which partition's data of the backup image to restore:</p>
+<p>NOTE: If using the 'Full System Recovery' tab, but restoring selected partitions only, the original disk's boot record and partition table will also be copied to the destination 
+disk.  This will ensure the partition structure on the new disk is the same as the original.  The partition options below will set whether the DATA inside those partitions is 
+restored.  If using the 'Restore Data Only' tab, the boot record and partition table is NOT restored.</p>
 
 <form id="redo_form" class="form-horizontal">
 
   <ul id="redo_tabs" class="nav nav-tabs" style="margin-bottom: 1em;">
-    <li class="active"><a href="#baremetal" data-toggle="tab">Full system recovery <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Restores backup image even if the target is blank. Master boot record and partition table will be completely overwritten."></i></a></li>
+    <li class="active"><a href="#baremetal" data-toggle="tab">Full System Recovery <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Restores backup image even if the target is blank. Master boot record and partition table will be completely overwritten."></i></a></li>
     <?php if (!$whole_disk_image) { ?>  
-    <li><a href="#selective" data-toggle="tab">Restore data only <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Preserves and does not alter the current master boot record or partition table. Only writes data into existing selected partitions."></i></a></li>
+    <li><a href="#selective" data-toggle="tab">Restore Data Only <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Preserves and does not alter the current master boot record or partition table. Only writes data into existing selected partitions."></i></a></li>
     <?php } ?>  
   </ul>
   <div id="myTabContent" class="tab-content">
