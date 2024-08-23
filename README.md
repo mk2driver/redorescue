@@ -11,8 +11,10 @@
 
 **Redo Rescue** (also known as [Redo Backup](https://github.com/redobackup/redobackup)) is a live CD/USB system that creates and restores snapshots of your system. Restore the image, even to a new blank drive, and recover in minutes from ransomware and viruses, deletions, hardware damage, and hackers.
 
-**This is a fork I'm working on to add support for MD RAID backup.  CURRENTLY VERY MUCH A TEST BED - DO NOT USE!!  PLEASE USE THE OFFICIAL REPO!!**
-
+**This is a fork of RedoRescue v5.0.0 with the following additional features added...**
+  * Support for MD RAID / Software RAID
+  * Ability to image an entire disk using dd imaging (block by block copy with compression)
+  * Use of Zstd compression by default
 
 ## Screenshots
 
