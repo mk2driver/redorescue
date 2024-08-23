@@ -45,7 +45,7 @@ foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_
 
   <ul id="redo_tabs" class="nav nav-tabs" style="margin-bottom: 1em;">
     <li class="active"><a href="#baremetal" data-toggle="tab">Full system recovery <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Restores backup image even if the target is blank. Master boot record and partition table will be completely overwritten."></i></a></li>
-    <?php if (!whole_disk_image) { ?>  
+    <?php if (!$whole_disk_image) { ?>  
     <li><a href="#selective" data-toggle="tab">Restore data only <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Preserves and does not alter the current master boot record or partition table. Only writes data into existing selected partitions."></i></a></li>
     <?php } ?>  
   </ul>
