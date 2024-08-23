@@ -61,9 +61,11 @@ if (is_string($image)) crash($image, 'restore-3');
         </thead>
         <tbody>
 	<?php
+	$show_selective = TRUE;
 	foreach ($image->parts as $name=>$p) {
 		if ($p->type == 'Whole Disk') {
 			$new_part_name = $status->drive;
+			$show_selective = FALSE;
 		}else{
 			// Must also accommodate NVMe-style and MD RAID partition IDs
 			preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
@@ -87,7 +89,9 @@ if (is_string($image)) crash($image, 'restore-3');
         </tbody>
       </table>
     </div>
-
+	  
+<?php if ($show_selective) { ?>
+			    
     <div class="tab-pane fade" id="selective">
       <table class="table table-striped table-hover">
         <thead>
@@ -126,7 +130,7 @@ if (is_string($image)) crash($image, 'restore-3');
         <p><i class="fas fa-exclamation-circle"></i> Remapping partitions to new targets will render a restored operating system unbootable. This option is for advanced users only.</p>
       </div>
    </div>
-
+<?php } ?>
   </div>
 
   <div class="form-group">
