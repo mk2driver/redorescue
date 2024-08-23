@@ -84,7 +84,7 @@ restored.  If using the 'Restore Data Only' tab, the boot record and partition t
 		print "<tr>";
 		print "  <td><input type='checkbox' $checked name='baremetal_parts[]' id='baremetal_$name' value='$name'></td>";
 		print "  <td>$name</td>";
-		print "  <td>$p->size</td>";
+		print "  <td>" . $p->size . "B</td>";
 		print "  <td nowrap>$p->type</td>";
 		print "  <td nowrap>$p->fs</td>";
 		print "  <td>$p->desc</td>";
@@ -120,7 +120,7 @@ restored.  If using the 'Restore Data Only' tab, the boot record and partition t
 		print "<tr>";
 		print "  <td><p class='form-control-static'><input type='checkbox' $checked name='selective_parts[]' id='selective_$name' value='$name' onClick='toggleEnabled(\"$name\");'></p></td>";
 		print "  <td><p class='form-control-static'>$name</p></td>";
-		print "  <td><p class='form-control-static'>$p->size</p></td>";
+		print "  <td><p class='form-control-static'>" . $p->size . "B</p></td>";
 		print "  <td><p class='form-control-static text-nowrap'>$p->type</p></td>";
 		print "  <td><p class='form-control-static text-nowrap'>$p->fs</p></td>";
 		print "  <td><p class='form-control-static'>$p->desc</p></td>";
