@@ -43,6 +43,7 @@ if (!isset($disk)) crash('Unable to read information for selected drive.');
       </tr>
     </thead>
     <tbody>
+	    
 <?php
 $fsuse_var = 'fsuse%';
 
