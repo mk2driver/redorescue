@@ -3,7 +3,7 @@
 $status = get_status();
 
 // Set drive name and size
-if (isset($status->drive)) $_REQUEST['drive'] = $status->drive;
+//if (isset($status->drive)) $_REQUEST['drive'] = $status->drive;
 $status->drive = preg_replace('/[^A-Za-z0-9_\-]/', '', $_REQUEST['drive']);
 $status->drive_bytes = get_dev_bytes($status->drive);
 
@@ -31,6 +31,10 @@ $options = array(''=>'(None)') + get_part_options($disks, array(), '/.*/');
 // Load image details
 $image = get_image_info();
 if (is_string($image)) crash($image, 'restore-3');
+
+//check if this is a whole disk image
+$whole_disk_image = FALSE;
+foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_image = TRUE;}
 ?>
 
 <h1>Restore</h1>
@@ -41,7 +45,9 @@ if (is_string($image)) crash($image, 'restore-3');
 
   <ul id="redo_tabs" class="nav nav-tabs" style="margin-bottom: 1em;">
     <li class="active"><a href="#baremetal" data-toggle="tab">Full system recovery <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Restores backup image even if the target is blank. Master boot record and partition table will be completely overwritten."></i></a></li>
+    <?php if (!whole_disk_image) { ?>  
     <li><a href="#selective" data-toggle="tab">Restore data only <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Preserves and does not alter the current master boot record or partition table. Only writes data into existing selected partitions."></i></a></li>
+    <?php } ?>  
   </ul>
   <div id="myTabContent" class="tab-content">
 
@@ -63,9 +69,9 @@ if (is_string($image)) crash($image, 'restore-3');
 	<?php
 	$show_selective = TRUE;
 	foreach ($image->parts as $name=>$p) {
-		if ($p->type == 'Whole Disk') {
+		if ($whole_disk_image) {
 			$new_part_name = $status->drive;
-			$show_selective = FALSE;
+			break;
 		}else{
 			// Must also accommodate NVMe-style and MD RAID partition IDs
 			preg_match('/(.+\D+)(\d+)$/', $name, $m);  // $m[2] contains the part_num
@@ -90,7 +96,7 @@ if (is_string($image)) crash($image, 'restore-3');
       </table>
     </div>
 	  
-<?php if ($show_selective) { ?>
+<?php if (!$whole_disk_image) { ?>
 			    
     <div class="tab-pane fade" id="selective">
       <table class="table table-striped table-hover">
