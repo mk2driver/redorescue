@@ -18,12 +18,22 @@ if (sizeof($disk_options)==0) crash('FATAL ERROR: No disks found!');
   <fieldset>
 
     <div class="form-group">
-      <label class="col-sm-2 control-label">Target <a data-toggle="tooltip" title="Select the disk connected to your computer you want to restore the image to"><i class="text-info fas fa-info-circle"></i></a></label>
+      <label class="col-sm-2 control-label">Target <a data-toggle="tooltip" title="Select the disk connected to your computer you want to restore the image to."><i class="text-info fas fa-info-circle"></i></a></label>
       <div class="col-sm-10">
         <select id="drive" class="form-control">
 	<?php
 	foreach ($disk_options as $ov=>$od) print "<option value='$ov'>$od</option>";
 	?>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Signature Option <a data-toggle="tooltip" title="Select how the target disk's signature (UUID) will be generated."><i class="text-info fas fa-info-circle"></i></a></label>
+      <div class="col-sm-6">
+        <select id="disk_signature" class="form-control">
+	  <option value='keep_existing'>Retain disk signature of the original disk (default)</option>
+	  <option value='new'>Generate a new random disk signature</option>
         </select>
       </div>
     </div>
