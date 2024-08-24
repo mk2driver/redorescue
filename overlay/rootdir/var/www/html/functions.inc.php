@@ -732,14 +732,14 @@ function restore_init() {
 			$sfd = tempnam(TMP_DIR, 'sfd_');
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
-			$log = "\nDeleting existing partition table information on target disk " . $status->drive . "...\n";
+			$log = "\nDeleting existing partition table information on target disk...\n";
 			$log .= shell_exec("wipefs --all --force /dev/".$status->drive);
 			$log .= sleep(0.5);
-			$log .= "\nRestoring MBR data (63 512B sectors) of partition table on target disk " . $status->drive . "...\n";
+			$log .= "\nRestoring MBR data (first 63 sectors) on target disk...\n";
 			$log .= shell_exec("dd if=$mbr of=/dev/".$status->drive." bs=32256 count=1 2>&1");
 			$log .= shell_exec("sync");
 			$log .= sleep(0.5);
-			$log .= "\nRestoring partition table using fsdisk on target disk " . $status->drive . "...\n";
+			$log .= "\nRestoring partition table on target disk...\n";
 			$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
 			$log .= shell_exec("sync");
 			$log .= sleep(0.5);
