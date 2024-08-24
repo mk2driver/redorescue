@@ -731,6 +731,10 @@ function restore_init() {
 			file_put_contents($mbr, base64_decode($status->image->mbr_bin));
 			$sfd = tempnam(TMP_DIR, 'sfd_');
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
+
+			//remove original disk signature from sfdisk dump to automatically generate a new id
+			if ($status->signature_option == 'new') $sfd = str_replace("label-id", '', $sfd);
+			
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
 			$log = "\nDeleting existing partition table information on target disk...\n";
 			$log .= shell_exec("wipefs --all --force /dev/".$status->drive);
