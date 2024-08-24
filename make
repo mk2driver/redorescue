@@ -173,7 +173,7 @@ apt install --no-install-recommends --yes \
 	nmap time lvm2 gparted gnome-disk-utility baobab gddrescue testdisk \
 	dosfstools ntfs-3g reiserfsprogs reiser4progs hfsutils jfsutils \
 	smbclient cifs-utils nfs-common sshfs partclone pigz yad f2fs-tools \
-	exfat-fuse btrfs-progs mdadm zstd \
+	exfat-fuse btrfs-progs mdadm zstd dolphin \
 	\
 	nginx php-fpm php-cli chromium $PKGS
 
