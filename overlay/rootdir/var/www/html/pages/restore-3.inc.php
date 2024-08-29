@@ -53,6 +53,7 @@ $("#redo_form").submit(function(event) {
 	event.preventDefault();
 	var url = 'action.php?page=restore-4';
 	var drive = $('#drive').val();
+	var disk_signature = $('#disk_signature').val();
 	var posting = $.post(url, { drive: drive });
 	posting.done(function(data) {
 		$("#content").html($(data));
