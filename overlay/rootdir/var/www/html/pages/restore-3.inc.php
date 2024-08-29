@@ -31,7 +31,7 @@ if (sizeof($disk_options)==0) crash('FATAL ERROR: No disks found!');
     <div class="form-group">
       <label class="col-sm-2 control-label">Signature Option <a data-toggle="tooltip" title="Select how the target disk's signature (UUID) will be generated."><i class="text-info fas fa-info-circle"></i></a></label>
       <div class="col-sm-6">
-        <select id="disk_signature" class="form-control">
+        <select id="signature_option" class="form-control">
 	  <option value='keep_existing'>Retain disk signature of the original disk (default)</option>
 	  <option value='new'>Generate a new random disk signature</option>
         </select>
@@ -53,7 +53,7 @@ $("#redo_form").submit(function(event) {
 	event.preventDefault();
 	var url = 'action.php?page=restore-4';
 	var drive = $('#drive').val();
-	var disk_signature = $('#disk_signature').val();
+	var signature_option = $('#signature_option').val();
 	var posting = $.post(url, { drive: drive });
 	posting.done(function(data) {
 		$("#content").html($(data));
