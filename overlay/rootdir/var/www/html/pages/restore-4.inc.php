@@ -8,7 +8,7 @@ $status->drive = preg_replace('/[^A-Za-z0-9_\-]/', '', $_REQUEST['drive']);
 $status->drive_bytes = get_dev_bytes($status->drive);
 
 //save disk signature option
-$status->signature_option = $_REQUEST['disk_signature'];
+$status->signature_option = $_REQUEST['signature_option'];
 
 // Save status
 set_status($status);
