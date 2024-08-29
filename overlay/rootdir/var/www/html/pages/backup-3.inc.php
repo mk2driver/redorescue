@@ -37,12 +37,14 @@ foreach ($disks->blockdevices as $d) {
 		foreach ($d->children as $c) {
 			if ($c->name == $status->drive) $disk = $c;
 		}
+		//if raid volumes did not match the selected disk, we might be backing up the entire raid member disk
+		if (!isset($disk)) {if ($d->name == $status->drive) $disk = $d;}
 	    }else{
 		// non-raid member disk
 		if ($d->name == $status->drive) $disk = $d;
 	}	
 }
-if (!isset($disk)) crash('Unable to read information for selected disk.');
+if (!isset($disk)) crash('Unable to read information for selected disk.', $err_link);
 
 // Get partition options
 $options = get_part_options($disks, $status->parts);
