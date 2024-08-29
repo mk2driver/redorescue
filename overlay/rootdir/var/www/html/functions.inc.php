@@ -733,7 +733,11 @@ function restore_init() {
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
 
 			//remove original disk signature from sfdisk dump to automatically generate a new id
-			if ($status->signature_option == 'new') $sfd = str_replace("label-id", '', $sfd);
+			if ($status->signature_option == 'new') {
+				$sig_line_start = strpos($sfd, 'label-id');
+				$sig_line_length = strpos($sfd, "/n", $sig_line_start) - $sig_line_start;
+				$sfd = str_replace("label-id", '', $sfd, $sig_line_length);
+			}
 			
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
 			$log = "\nDeleting existing partition table information on target disk...\n";
