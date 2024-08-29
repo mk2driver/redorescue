@@ -22,7 +22,7 @@ foreach ($disks->blockdevices as $d) {
 }
 
 // show error if disk or raid volume not found with the selected name
-if (!isset($disk)) crash('Unable to read information for selected drive.');
+if (!isset($disk)) crash('Unable to read information for selected drive.', 'backup-1');
 ?>
 
 <h1>Backup</h1>
@@ -61,7 +61,7 @@ print "  <td>Block by block image of entire disk.</td>";
 print "</tr>";
 
 foreach ($disk->children as $p) {
-	if ($p->parttype=='0x5') continue;
+	if ($p->parttype=='0x5' || $p->parttype==NULL) continue;
 	$pct = '';
 	if (property_exists($p, $fsuse_var)) $pct = $p->$fsuse_var;
 	$notice = '';
