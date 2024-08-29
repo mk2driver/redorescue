@@ -54,7 +54,7 @@ $("#redo_form").submit(function(event) {
 	var url = 'action.php?page=restore-4';
 	var drive = $('#drive').val();
 	var signature_option = $('#signature_option').val();
-	var posting = $.post(url, { drive: drive });
+	var posting = $.post(url, { drive: drive, signature_option: signature_option });
 	posting.done(function(data) {
 		$("#content").html($(data));
 	});
