@@ -87,8 +87,10 @@ function get_disks($force_refresh=FALSE) {
 				foreach ($l->children as &$c) {
 					if (str_starts_with($c->type, 'raid')) {
 						foreach ($l->children as &$r) {$r->os = null;}
+						file_put_contents("/tmp/diag.txt", "setting raid as null: " . $r->name . "\n", FILE_APPEND);
 					}
 					$c->os = null;
+					file_put_contents("/tmp/diag.txt", "setting as null: " . $r->name . "\n", FILE_APPEND);
 				}
 			}
 		}
@@ -217,7 +219,7 @@ function get_part_options($disks, $exclude=array(), $fstype_filter='/fat.*|exfat
 			foreach ($d->children as $c) {
 				if (in_array($c->name, $exclude)) continue;
 				if (!preg_match($fstype_filter, $c->fstype)) continue;
-				if (!property_exists($c, 'os')) file_put_contents("/tmp/diag.txt", "name: " . $c->name . "\n", FILE_APPEND);
+				if (!property_exists($c, 'os')) file_put_contents("/tmp/diag.txt", "property not exists: " . $c->name . "\n", FILE_APPEND);
 				$p = array(
 					'name'	=> $c->name,
 					'vendor'=> $d->vendor,
