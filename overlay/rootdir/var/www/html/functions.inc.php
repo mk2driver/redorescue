@@ -731,15 +731,6 @@ function restore_init() {
 			file_put_contents($mbr, base64_decode($status->image->mbr_bin));
 			$sfd = tempnam(TMP_DIR, 'sfd_');
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
-
-			//remove original disk signature from sfdisk dump to automatically generate a new id
-			if ($status->signature_option == 'new') {
-				file_put_contents(TMP_DIR.'sfdisk_pre.txt', $sfd);
-				$sig_line_start = strpos($sfd, 'label-id');
-				$sig_line_length = strpos($sfd, "/n", $sig_line_start) - $sig_line_start;
-				$sfd = str_replace("label-id", '', $sfd, $sig_line_length);
-				file_put_contents(TMP_DIR.'sfdisk_post.txt', $sfd);
-			}
 			
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
 			$log = "\nDeleting existing partition table information on target disk...\n";
@@ -750,7 +741,14 @@ function restore_init() {
 			$log .= shell_exec("sync");
 			$log .= sleep(0.5);
 			$log .= "\nRestoring partition table on target disk...\n";
-			$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
+
+			//remove original disk signature from sfdisk dump to automatically generate a new id
+			if ($status->signature_option == 'new') {
+				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd | grep -v ^label-id");
+			}else{
+				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
+			}
+			
 			$log .= shell_exec("sync");
 			$log .= sleep(0.5);
 			$log .= shell_exec("partprobe /dev/".$status->drive);
