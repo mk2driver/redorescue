@@ -733,7 +733,7 @@ function restore_init() {
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
 			//create a version of sfd file with disk signature removed to force a new one to be generated
 			$sfd_new_sig = tempnam(TMP_DIR, 'sfd_new_sig_');
-			shel_exec("cat " . $sfd . " | grep -v ^label-id > " . $sfd_new_sig);
+			shell_exec("cat " . $sfd . " | grep -v ^label-id > " . $sfd_new_sig);
 			
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
 			$log = "\nDeleting existing partition table information on target disk...\n";
