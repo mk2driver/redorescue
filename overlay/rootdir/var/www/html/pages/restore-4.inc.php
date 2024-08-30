@@ -3,8 +3,7 @@
 $status = get_status();
 
 // Set drive name and size
-//if (isset($status->drive)) $_REQUEST['drive'] = $status->drive;
-$status->drive = preg_replace('/[^A-Za-z0-9_\-]/', '', $_REQUEST['drive']);
+if (isset($_REQUEST['drive'])) $status->drive = preg_replace('/[^A-Za-z0-9_\-]/', '', $_REQUEST['drive']);
 $status->drive_bytes = get_dev_bytes($status->drive);
 
 //save disk signature option
