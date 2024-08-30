@@ -37,8 +37,8 @@ $image = get_image_info();
 if (is_string($image)) crash($image, 'restore-3');
 
 //check if this is a whole disk image
-$whole_disk_image = FALSE;
-foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $whole_disk_image = TRUE;}
+$status->whole_disk_dd = FALSE;
+foreach ($image->parts as $name=>$p) {if ($p->type == 'Whole Disk') $status->whole_disk_dd = TRUE;}
 ?>
 
 <h1>Restore</h1>
@@ -52,7 +52,7 @@ restored.  If using the 'Restore Data Only' tab, the boot record and partition t
 
   <ul id="redo_tabs" class="nav nav-tabs" style="margin-bottom: 1em;">
     <li class="active"><a href="#baremetal" data-toggle="tab">Full System Recovery <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Restores backup image even if the target is blank. Master boot record and partition table will be completely overwritten."></i></a></li>
-    <?php if (!$whole_disk_image) { ?>  
+    <?php if (!$status->whole_disk_dd) { ?>  
     <li><a href="#selective" data-toggle="tab">Restore Data Only <i class="fas fa-info-circle text-info" data-toggle="tooltip" title="Preserves and does not alter the current master boot record or partition table. Only writes data into existing selected partitions."></i></a></li>
     <?php } ?>  
   </ul>
@@ -75,7 +75,7 @@ restored.  If using the 'Restore Data Only' tab, the boot record and partition t
         <tbody>
 	<?php
 	foreach ($image->parts as $name=>$p) {
-		if ($whole_disk_image) {
+		if ($status->whole_disk_dd) {
 			$new_part_name = $status->drive;
 		}else{
 			// Must also accommodate NVMe-style and MD RAID partition IDs
@@ -101,7 +101,7 @@ restored.  If using the 'Restore Data Only' tab, the boot record and partition t
       </table>
     </div>
 	  
-<?php if (!$whole_disk_image) { ?>
+<?php if (!$status->whole_disk_dd) { ?>
 			    
     <div class="tab-pane fade" id="selective">
       <table class="table table-striped table-hover">
