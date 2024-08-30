@@ -22,12 +22,14 @@ foreach ($all_disks->blockdevices as $d) {
 	//check if raid member disk
 	if (str_ends_with($d->fstype, '_raid_member')) {
 		//raid member so loop through child volumes
-		foreach ($d->children as $c) { if ($c->name == $status->drive) {$disks->blockdevices[] = $c;} }
+		if (property_exists($d, 'children')) {
+			foreach ($d->children as $c) { if ($c->name == $status->drive) {$disks->blockdevices[] = $c;} }
+		}
 	}else{
 		//standard disk
 		if ($d->name == $status->drive) {$disks->blockdevices[] = $d;}
 	}
-	if (property_exists($disks, 'blockdevices')) {break;}
+	if (property_exists($disks, 'blockdevices')) break;
 }
 $options = array(''=>'(None)') + get_part_options($disks, array(), '/.*/');
 
