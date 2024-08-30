@@ -744,7 +744,9 @@ function restore_init() {
 
 			//remove original disk signature from sfdisk dump to automatically generate a new id
 			if ($status->signature_option == 'new') {
-				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd | grep -v ^label-id");
+				shell_exec("cat " . $sfd . " > pre.txt");
+				shell_exec("cat " . $sfd . " | grep -v ^label-id > post.txt");
+				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < post.txt");
 			}else{
 				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
 			}
