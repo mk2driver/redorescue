@@ -86,11 +86,9 @@ function get_disks($force_refresh=FALSE) {
 			if (property_exists($l, 'children')) {
 				foreach ($l->children as &$c) {
 					if (str_starts_with($c->type, 'raid')) {
-						foreach ($l->children as &$r) {$r->os = null;}
-						file_put_contents("/tmp/diag.txt", "setting raid as null: " . $r->name . "\n", FILE_APPEND);
+						foreach ($c->children as &$r) {$r->os = null;}
 					}
 					$c->os = null;
-					file_put_contents("/tmp/diag.txt", "setting as null: " . $r->name . "\n", FILE_APPEND);
 				}
 			}
 		}
