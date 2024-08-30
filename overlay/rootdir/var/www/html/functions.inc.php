@@ -1063,7 +1063,7 @@ function legacy_image_details() {
 //
 function signature_gen($dev_id) {
 	$log = "Changing signature on target disk " . $dev_id . "\n";
-	$log .= shell_exec("sfdisk --dump " . $dev_id . " | grep -v ^label-id | sfdisk " . $dev_id);
+	$log .= shell_exec("sfdisk --dump /dev/" . $dev_id . " | grep -v ^label-id | sfdisk /dev/" . $dev_id);
 	file_put_contents(LOG_FILE, $log, FILE_APPEND);
 }
 ?>
