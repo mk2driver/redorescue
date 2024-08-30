@@ -87,9 +87,8 @@ function get_disks($force_refresh=FALSE) {
 				foreach ($l->children as &$c) {
 					if (str_starts_with($c->type, 'raid')) {
 						foreach ($l->children as &$r) {$r->os = null;}
-					}else{
-						$c->os = null;
 					}
+					$c->os = null;
 				}
 			}
 		}
@@ -758,6 +757,7 @@ function restore_init() {
 			$log .= sleep(0.5);
 			@unlink($mbr);
 			@unlink($sfd);
+			@unlink($sfd_new_sig);
 			file_put_contents(LOG_FILE, $log, FILE_APPEND);
 			if (isset($status->source)) {
 			$vars = array('type'=>'local', 'local_part'=>$status->source);
