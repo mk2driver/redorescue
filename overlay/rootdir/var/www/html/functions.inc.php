@@ -731,6 +731,9 @@ function restore_init() {
 			file_put_contents($mbr, base64_decode($status->image->mbr_bin));
 			$sfd = tempnam(TMP_DIR, 'sfd_');
 			file_put_contents($sfd, base64_decode($status->image->sfd_bin));
+			//create a version of sfd file with disk signature removed to force a new one to be generated
+			$sfd_new_sig = tempnam(TMP_DIR, 'sfd_new_sig_');
+			shel_exec("cat " . $sfd . " | grep -v ^label-id > " . $sfd_new_sig);
 			
 			if (!unmount($status->drive.'*')) return "Target partition busy or unable to be unmounted";
 			$log = "\nDeleting existing partition table information on target disk...\n";
@@ -742,11 +745,9 @@ function restore_init() {
 			$log .= sleep(0.5);
 			$log .= "\nRestoring partition table on target disk...\n";
 
-			//remove original disk signature from sfdisk dump to automatically generate a new id
+			// check which sfd file we need to use depending on disk signature option
 			if ($status->signature_option == 'new') {
-				shell_exec("cat " . $sfd . " > pre.txt");
-				shell_exec("cat " . $sfd . " | grep -v ^label-id > post.txt");
-				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < post.txt");
+				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd_new_sig");
 			}else{
 				$log .= shell_exec("sfdisk --force /dev/".$status->drive." < $sfd");
 			}
