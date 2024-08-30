@@ -15,6 +15,7 @@
   * Support for MD RAID / Software RAID
   * Ability to image an entire disk using dd imaging (block by block copy with compression)
   * Use of Zstd compression by default
+  * Ability to change target disk's signature / UUID during the restore operation
 
 ## Screenshots
 
