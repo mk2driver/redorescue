@@ -1058,4 +1058,12 @@ function legacy_image_details() {
 	return $details;
 }
 
+//
+// Attempt to generate a new disk signature on specified device
+//
+function signature_gen($dev_id) {
+	$log = "Changing signature on target disk " . $dev_id . "\n";
+	$log .= shell_exec("sfdisk --dump " . $dev_id . " | grep -v ^label-id | sfdisk " . $dev_id);
+	file_put_contents(LOG_FILE, $log, FILE_APPEND);
+}
 ?>
