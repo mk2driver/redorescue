@@ -217,7 +217,7 @@ function get_part_options($disks, $exclude=array(), $fstype_filter='/fat.*|exfat
 			foreach ($d->children as $c) {
 				if (in_array($c->name, $exclude)) continue;
 				if (!preg_match($fstype_filter, $c->fstype)) continue;
-				if (!property_exists($c, 'os')) file_put_contents("/tmp/diag.txt", "name: " . $c->name . "/n", FILE_APPEND);
+				if (!property_exists($c, 'os')) file_put_contents("/tmp/diag.txt", "name: " . $c->name . "\n", FILE_APPEND);
 				$p = array(
 					'name'	=> $c->name,
 					'vendor'=> $d->vendor,
