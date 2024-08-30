@@ -124,6 +124,9 @@ if (sizeof($status->progress->exec) > 0) {
 	} else {
 		// No partitions waiting; see if we're finished
 		if (sizeof($status->progress->done) == sizeof($status->parts)) {
+			//check if disk signature generation is required
+			if ($status->signature_option == 'new') signature_gen($status->drive);
+			
 			$secs = time() - $status->start_time;
 			$elapsed = floor($secs/3600).gmdate(":i:s", $secs%3600);
 			$elapsed = preg_replace('/^0+\:/', '', $elapsed);
