@@ -61,7 +61,7 @@
 
 **The latest ISO image can be downloaded from Google Drive:**
 
-[![Download Redo Rescue: Backup and Recovery](https://icon-library.com/images/google-drive-icon-ico/google-drive-icon-ico-28.jpg)](https://drive.google.com/file/d/14ZMMWNilaqgyqNtB73D8AzlXaeTn4OFH/view?usp=drive_link)
+[![Download Redo Rescue: Backup and Recovery](https://icon-library.com/images/google-drive-icon-ico/google-drive-icon-ico-28.jpg)](https://drive.google.com/file/d/14ZMMWNilaqgyqNtB73D8AzlXaeTn4OFH/view?usp=sharing)
 
 
 ## Examples
